@@ -199,7 +199,7 @@
 
     <script>
         const MODEL = '@preset/micro';
-        const API_URL = 'https://shiny-rain-a38a.japeep.workers.dev'; // Replace with your Cloudflare Worker URL
+        const API_URL = 'https://your-worker-name.your-subdomain.workers.dev'; // Replace with your Cloudflare Worker URL
 
         const messagesDiv = document.getElementById('messages');
         const userInput = document.getElementById('userInput');
@@ -231,12 +231,11 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             try {
-                // Call OpenRouter API
+                // Call Cloudflare Worker (which proxies to OpenRouter)
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_KEY}`,
                     },
                     body: JSON.stringify({
                         model: MODEL,
