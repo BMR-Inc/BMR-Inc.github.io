@@ -198,30 +198,27 @@
     </div>
 
     <script>
-        const API_URL = 'https://shiny-rain-a38a.japeep.workers.dev'; // Replace with your Cloudflare Worker URL
+        // Replace with your Cloudflare Worker URL
+        const API_URL = 'https://your-worker-name.your-subdomain.workers.dev';
 
         const messagesDiv = document.getElementById('messages');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
         let conversationHistory = [];
 
-        // Handle sending messages
         async function sendMessage() {
             const text = userInput.value.trim();
             if (!text || sendBtn.disabled) return;
 
-            // Add user message to UI
             addMessageToUI('user', text);
             userInput.value = '';
             sendBtn.disabled = true;
 
-            // Add to conversation history
             conversationHistory.push({
                 role: 'user',
                 content: text
             });
 
-            // Show typing indicator
             const typingDiv = document.createElement('div');
             typingDiv.className = 'message assistant';
             typingDiv.id = 'typing-indicator';
@@ -230,14 +227,12 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             try {
-                // Call Cloudflare Worker (which proxies to OpenRouter)
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        model: MODEL,
                         messages: conversationHistory,
                         temperature: 0.7,
                         top_p: 1,
@@ -252,13 +247,9 @@
                 const data = await response.json();
                 const assistantMessage = data.choices[0].message.content;
 
-                // Remove typing indicator
                 document.getElementById('typing-indicator').remove();
-
-                // Add assistant message to UI
                 addMessageToUI('assistant', assistantMessage);
 
-                // Add to conversation history
                 conversationHistory.push({
                     role: 'assistant',
                     content: assistantMessage
@@ -299,7 +290,6 @@
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
-        // Event listeners
         sendBtn.addEventListener('click', sendMessage);
         userInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !sendBtn.disabled) {
@@ -307,7 +297,6 @@
             }
         });
 
-        // Focus input on load
         userInput.focus();
     </script>
 </body>
